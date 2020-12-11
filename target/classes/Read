@@ -1,0 +1,12 @@
+日活需求(kafka精准一次性消费) 分别用sparkstreaming和flink实现
+实现思路1：sparkstreaming消费kafka数据，使用redis保存kafka偏移量，确保程序意外退出后能从之前的偏移量继续消费，并保存至es做去重。
+实现思路2：flink消费kafka数据，使用状态后端(state backend)保存data source中来自kafka的偏移量，确保程序宕机后重启能从之前的偏移位置重新消费。
+端到端exactly-once实现：
+
+source端：kafka偏移量
+
+内部：sparkingstreaming：redis做去重同时保存偏移量
+
+flink：state backend状态后端
+
+sink端：es的id不可重复，做幂等性写入
